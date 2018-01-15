@@ -22,8 +22,8 @@ Meta> factorial[5]
 
 I've included a number of methods for representing data in the `data/`
 directory, if Mathematica's structures want to be avoided. Specifically,
-implementations of the [Church encoding](https://www.google.com)
-and [Peano numbers](https://www.google.com).
+implementations of the [Church encoding](https://en.wikipedia.org/wiki/Church_encoding)
+and [Peano numbers](https://wiki.haskell.org/Peano_numbers).
 
 ## Example
 
