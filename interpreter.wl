@@ -1,4 +1,6 @@
-<<"/Users/johngargalionis/Dropbox/mathematicaPackages/metamathica/quotation.wl";
+(* ::Package:: *)
+
+<<"quotation.wl";
 
 (* -------------------------------------- *)
 (* evalExpr is used to evaluate meta code *)

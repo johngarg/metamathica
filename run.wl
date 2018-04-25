@@ -1,11 +1,29 @@
-<<"/Users/johngargalionis/Dropbox/mathematicaPackages/metamathica/quotation.wl";
-(* <<"/Users/johngargalionis/Dropbox/mathematicaPackages/metamathica/interpreter.wl"; *)
-<<"/Users/johngargalionis/Dropbox/mathematicaPackages/metamathica/examples/lazy.wl";
-(* <<"/Users/johngargalionis/Dropbox/mathematicaPackages/metamathica/core.wl"; *)
+(* ::Package:: *)
+
+<<"quotation.wl";
 
 
-(* for use with the regular interpreter, in that case no thunks to be forced *)
-force[x_] := x
+(* Use only one interpreter at a time! *)
+interpreterChoice = "lazy"; (* Choose one of "core", "regular", "lazy" *)
+
+Which[
+    (* As bare as possible *)
+	interpreterChoice=="core",
+	<<"core.wl";
+	processOutput = Identity;
+	Print["Running the core interpreter."],
+	
+	(* More features *)
+	interpreterChoice=="regular",
+	<<"interpreter.wl";
+	processOutput = Identity; (* Convenient to leave the `force` command below *)
+	Print["Running the regular interpreter."],
+	
+	(* The lazy interpeter example *)
+	interpreterChoice=="lazy",
+	<<"examples/lazy.wl";
+	processOutput = force;
+	Print["Running the lazy interpreter."]];
 
 
 (* the interactive Read-Eval-Print-Loop [REPL] *)
@@ -32,23 +50,13 @@ repl[] :=
 
     (* evaluate string containing quoted expression *)
     quotedInput = ToExpression[input]//Quiet;
-    (* Print[quotedInput]; *)
+    Print[quotedInput];
 
     If[Head[quotedInput] === quoted[Get],
        Block[{fileName = quotedInput[[1]]},
-             quotedInput = ToExpression["quote["<>ReadString[fileName]<>"]"]//Quiet;
-             Print[fileName<>" loaded!"]]];
+             quotedInput = ToExpression["quote["<>ReadString[fileName]<>"]"]//Quiet;]];
 
     output = evalExpr[quotedInput, $theGlobalEnvironment]//Quiet;
-
-    (* (\* don't display thunks to the screen *\) *)
-    (* If[Head[output] === thunk, Print["thunk!"]; Continue[]]; *)
-
-    (* Don't print env in REPL when evaluating functions *)
-    (* If[Head[output] === Closure, *)
-    (*    Print["<Function>"], *)
-    (*    Print[output]]; *)
-    Print[output//force];, 1000] (* for now, run at most 1000 times *)
+    Print[processOutput[output]];, 1000] (* for now, run at most 1000 times *)
 
 repl[]
-

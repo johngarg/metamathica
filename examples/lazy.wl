@@ -1,11 +1,11 @@
+(* ::Package:: *)
+
 <<"../quotation.wl";
 
 (* Modification of ../interpreter.wl to support lazy evaluation *)
 
 (* -------------------------------------- *)
 (* evalExpr is used to evaluate meta code *)
-
-(* TODO debug assignment! *)
 
 (* string and numbers *)
 evalExpr[expr_?selfEvaluatingQ, env_] := expr;
@@ -62,7 +62,7 @@ evalExpr[quoted[Increment][x_], env_] :=
 (* list operations *)
 evalExpr[quoted[Part][xs_, ref_], env_] :=
   evalExpr[xs, env][[evalExpr[ref, env]]];
-evalExpr[quoted[Length][xs_], env_] := Length[xs];
+evalExpr[quoted[Length][xs_], env_] := Length[evalExpr[xs, env]];
 (* force *)
 evalExpr[quoted[force][xs_], env_] := force[evalExpr[xs, env]];
 
@@ -116,4 +116,3 @@ extendEnvironment[bindings_, env_] := Append[env, bindings];
 
 (* lookup a symbol in the environment map *)
 lookup[expr_, env_] := env[expr];
-
